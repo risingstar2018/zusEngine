@@ -1,5 +1,5 @@
 
-This file contains proposed SQL that implements queries and actions for the Omniwallet database.
+This file contains proposed SQL that implements queries and actions for the Zuswallet database.
  
 ## Queries	
 ### Get the encrypted Wallet for a Wallet ID

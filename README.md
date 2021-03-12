@@ -1,7 +1,7 @@
 omniEngine
 ==========
 
-This will be the engine that drives the data for the Omniwallet back end database
+This will be the engine that drives the data for the Zuswallet back end database
 
 Currently in development.
 

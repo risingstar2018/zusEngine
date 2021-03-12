@@ -28,9 +28,9 @@ def rSetNotUpdateZUR(baldata):
   fresh=baldata['fresh']
   if fresh!=None and len(fresh)>0:
     for addr in fresh:
-      rSet("omniwallet:balances:address:"+str(addr),json.dumps( {"bal":baldata['bal'][addr],"error":None}))
-      rExpire("omniwallet:balances:address:"+str(addr),expTime)
+      rSet("zuswallet:balances:address:"+str(addr),json.dumps( {"bal":baldata['bal'][addr],"error":None}))
+      rExpire("zuswallet:balances:address:"+str(addr),expTime)
 
 def rExpireAllBalZUR():
-  for addr in rKeys("omniwallet:balances:address:*"):
+  for addr in rKeys("zuswallet:balances:address:*"):
     rDelete(addr)

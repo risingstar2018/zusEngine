@@ -1,5 +1,5 @@
 /*
- * "omniwallet" schema
+ * "zuswallet" schema
  *
  * The database name is no longer contained in this SQL script.
  * You'll need to specify it on the command-line or with whatever tool you're using to connect.
@@ -486,7 +486,7 @@ create table if not exists Categories (
 ;
 
 /*
- * Generic settings table to be used for global omniwallet settings/features
+ * Generic settings table to be used for global zuswallet settings/features
  */
 create table if not exists Settings(
         Key varchar(32) not null

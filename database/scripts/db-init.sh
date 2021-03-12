@@ -6,7 +6,7 @@ if [[ -z "$ZUSDB_ENGINE_PASSWORD" ]] || [[ -z "$ZUSDB_WWW_PASSWORD" ]] || [ -z "
 fi
 OPTIONS="--echo-all -v ON_ERROR_STOP=1"
 echo "Create Database..."
-createdb "${ZUSDB_DATABASE}" "Omniwallet wallet and transaction database"
+createdb "${ZUSDB_DATABASE}" "Zuswallet wallet and transaction database"
 echo "Init Schema..."
 psql $OPTIONS -f ../omni_db_schema.psql ${ZUSDB_DATABASE}
 echo "Add intial data..."
