@@ -16,7 +16,7 @@ for tx in txtofix:
       PropertyID = rawtx['result']['propertyid']
 
       if getdivisible_MP(PropertyID):
-        BalanceAvailableCreditDebit = int(decimal.Decimal(rawtx['result']['amount'])*decimal.Decimal(1e8))
+        BalanceAvailableCreditDebit = int(decimal.Decimal(rawtx['result']['amount'])*decimal.Decimal(1e5))
       else:
         BalanceAvailableCreditDebit = int(rawtx['result']['amount'])
 

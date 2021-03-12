@@ -130,8 +130,8 @@ else:
         printdebug(("Block",height,"of",endBlock, "(took", timeDelta.microseconds, "microseconds, blocks left:", blocksLeft, ", eta", projectedTime,")"),1)
         lastStatusUpdateTime=statusUpdateTime
 
-      #Process Bitcoin Transacations
-      Protocol="Bitcoin"
+      #Process Zurcoin Transacations
+      Protocol="Zurcoin"
 
       #Find number of tx's in block
       txcount=len(block_data['result']['tx'])
@@ -157,7 +157,7 @@ else:
         x+=1
 
       #Process Mastercoin Transacations (if any)
-      Protocol="Omni"
+      Protocol="Zurshares"
 
       #Find number of msc tx
       y=len(block_data_MP['result'])
@@ -200,8 +200,8 @@ else:
         syncAddress('1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P', Protocol)
 
       #Also make sure we update the json data in SmartProperties table used by exchange view
-      updateProperty(1,"Omni")
-      updateProperty(2,"Omni")
+      updateProperty(1,"Zurshares")
+      updateProperty(2,"Zurshares")
       #make sure we store the last serialnumber used
       dbExecute("select setval('transactions_txdbserialnum_seq', %s)", [TxDBSerialNum-1])
       #write db changes for entire block
@@ -232,7 +232,7 @@ else:
   #/while loop.  Finished processing all current blocks.
   try:
     #Also make sure we update the json data in SmartProperties
-    updateProperty(0,"Bitcoin")
+    updateProperty(0,"Zurcoin")
     dbCommit()
   except:
     pass

@@ -23,8 +23,8 @@ for tx in txtofix:
         PropertyID = rawtx['result']['purchasedpropertyid']
 
         if getdivisible_MP(PropertyID):
-          IssuerCreditDebit = int(decimal.Decimal(rawtx['result']['issuertokens'])*decimal.Decimal(1e8))
-          BalanceAvailableCreditDebit = int(decimal.Decimal(rawtx['result']['purchasedtokens'])*decimal.Decimal(1e8))
+          IssuerCreditDebit = int(decimal.Decimal(rawtx['result']['issuertokens'])*decimal.Decimal(1e5))
+          BalanceAvailableCreditDebit = int(decimal.Decimal(rawtx['result']['purchasedtokens'])*decimal.Decimal(1e5))
         else:
           IssuerCreditDebit = int(decimal.Decimal(rawtx['result']['issuertokens']))
           BalanceAvailableCreditDebit = int(rawtx['result']['purchasedtokens'])

@@ -12,7 +12,7 @@ from common import *
 def reparsetx_MP(txhash):
     printdebug(("Reparsing TX",txhash),4)
 
-    Protocol="Omni"
+    Protocol="Zurshares"
 
     try:
       rawtx=gettransaction_MP(txhash)
@@ -147,7 +147,7 @@ def reorgRollback(block):
           #use -1 for txdbserialnum as we don't know what the previous tx that last modified it's balanace was.
           updateBalance(Address, Protocol, PropertyID, Ecosystem, dbBalanceAvailable, dbBalanceReserved, dbBalanceAccepted, -TxDbSerialNum)
 
-          if Protocol=="Omni":
+          if Protocol=="Zurshares":
             #any special actions need to be undone as well
             if txtype == 20 and Role=='seller':
               try:
@@ -208,7 +208,7 @@ def reorgRollback(block):
 
     #Make sure we process any remaining expires that need to be undone if we didn't have an msc tx in the block
     expireAccepts(-(block+1))
-    expireCrowdsales(-BlockTime, "Omni")
+    expireCrowdsales(-BlockTime, "Zurshares")
 
     #delete from txstats once we rollback all other data
     dbExecute("delete from txstats where blocknumber>%s",[block])
@@ -279,7 +279,7 @@ def updateTxStatsBlock(blocknumber):
         tval_day=0
       valuelist={}
       total=0
-      rbtcusd=dbSelect("select rate1for2 from exchangerates where protocol1='Fiat' and protocol2='Bitcoin' and propertyid1=0 and propertyid2=0 order by asof desc limit 1")
+      rbtcusd=dbSelect("select rate1for2 from exchangerates where protocol1='Fiat' and protocol2='Zurcoin' and propertyid1=0 and propertyid2=0 order by asof desc limit 1")
       try:
         btcusd=decimal.Decimal(rbtcusd[0][0])
       except:
@@ -291,8 +291,8 @@ def updateTxStatsBlock(blocknumber):
         count=t[3]
         invalid=t[4]
         if divisible in ['true','True',True]:
-          volume=decimal.Decimal(volume)/decimal.Decimal(1e8)
-        rawrate=dbSelect("select rate1for2 from exchangerates where protocol1='Bitcoin' and protocol2='Omni' and propertyid1=0 and propertyid2=%s order by asof desc limit 1",[pid])
+          volume=decimal.Decimal(volume)/decimal.Decimal(1e5)
+        rawrate=dbSelect("select rate1for2 from exchangerates where protocol1='Zurcoin' and protocol2='Omni' and propertyid1=0 and propertyid2=%s order by asof desc limit 1",[pid])
         try:
           rate=decimal.Decimal(rawrate[0][0])
         except:
@@ -383,7 +383,7 @@ def updateAddPending():
     if len(existing) > 0:
       continue
 
-    protocol = "Omni"
+    protocol = "Zurshares"
     addresstxindex=0
     txdbserialnum = dbSelect("select least(-1,min(txdbserialnum)) from transactions;")[0][0]
     txdbserialnum -= 1
@@ -395,12 +395,12 @@ def updateAddPending():
 
       if 'amount' in rawtx:
         if rawtx['divisible']:
-          amount = int(decimal.Decimal(str(rawtx['amount']))*decimal.Decimal(1e8))
+          amount = int(decimal.Decimal(str(rawtx['amount']))*decimal.Decimal(1e5))
         else:
           amount = int(rawtx['amount'])
       else:
         if rawtx['propertyidforsaleisdivisible']:
-          amount = int(decimal.Decimal(str(rawtx['amountforsale']))*decimal.Decimal(1e8))
+          amount = int(decimal.Decimal(str(rawtx['amountforsale']))*decimal.Decimal(1e5))
         else:
           amount = int(rawtx['amountforsale'])
 
@@ -660,7 +660,7 @@ def offerAccept (rawtx, TxDBSerialNum, Block):
     #convert accepted amount to non divisible quantity to store in db
     #if rawtx['result']['divisible']:
     if getDivisible(rawtx):
-      amountaccepted=int(decimal.Decimal(str(rawtx['result']['amount']))*decimal.Decimal(1e8))
+      amountaccepted=int(decimal.Decimal(str(rawtx['result']['amount']))*decimal.Decimal(1e5))
     else:
       amountaccepted=int(rawtx['result']['amount'])
 
@@ -711,7 +711,7 @@ def updatedex(rawtx, TxDBSerialNum, Protocol):
     propertyidselling=rawtx['result']['propertyid']
 
     if getdivisible_MP(propertyidselling):
-      amountavailable=int(decimal.Decimal(str(rawtx['result']['amount']))*decimal.Decimal(1e8))
+      amountavailable=int(decimal.Decimal(str(rawtx['result']['amount']))*decimal.Decimal(1e5))
     else:
       amountavailable=int(rawtx['result']['amount'])
 
@@ -778,8 +778,8 @@ def updatedex(rawtx, TxDBSerialNum, Protocol):
       totalselling=amountavailable
 
       #convert all btc stuff, need additional logic for metadex
-      amountdesired=int(decimal.Decimal(str(rawtx['result']['bitcoindesired']))*decimal.Decimal(1e8))
-      minimumfee=int(decimal.Decimal(str(rawtx['result']['feerequired']))*decimal.Decimal(1e8))
+      amountdesired=int(decimal.Decimal(str(rawtx['result']['bitcoindesired']))*decimal.Decimal(1e5))
+      minimumfee=int(decimal.Decimal(str(rawtx['result']['feerequired']))*decimal.Decimal(1e5))
 
       #rawtx does't have ppc, do the calculation to store
       unitprice=int(amountdesired/amountavailable)
@@ -824,19 +824,19 @@ def updatedex2(rawtx, rawtrade, TxDBSerialNum):
       amountaccepted=0
 
       if rawtx['result']['propertyidforsaleisdivisible']:
-        totalselling=int(decimal.Decimal(str(rawtx['result']['amountforsale']))*decimal.Decimal(1e8))
-        amountavailable=int(decimal.Decimal(str(rawtrade['result']['amountremaining']))*decimal.Decimal(1e8))
+        totalselling=int(decimal.Decimal(str(rawtx['result']['amountforsale']))*decimal.Decimal(1e5))
+        amountavailable=int(decimal.Decimal(str(rawtrade['result']['amountremaining']))*decimal.Decimal(1e5))
       else:
         totalselling=int(rawtx['result']['amountforsale'])
         amountavailable=int(rawtrade['result']['amountremaining'])
 
       if rawtx['result']['propertyiddesiredisdivisible']:
-        amountdesired=int(decimal.Decimal(str(rawtrade['result']['amounttofill']))*decimal.Decimal(1e8))
+        amountdesired=int(decimal.Decimal(str(rawtrade['result']['amounttofill']))*decimal.Decimal(1e5))
       else:
         amountdesired=int(rawtrade['result']['amounttofill'])
 
       #convert all btc stuff, need additional logic for metadex
-      #minimumfee=int(decimal.Decimal(str(rawtx['result']['fee']))*decimal.Decimal(1e8))
+      #minimumfee=int(decimal.Decimal(str(rawtx['result']['fee']))*decimal.Decimal(1e5))
       #no min fee for dex 2.0
       minimumfee=0
 
@@ -921,20 +921,20 @@ def updatemarkets(propertyidselling,propertyiddesired,TxDBSerialNum, rawtx):
         if getdivisible_MP(propertyiddesired):
           totaldesired  = offer[0]
         else:
-          totaldesired  = int(decimal.Decimal(str(offer[0]))*decimal.Decimal(1e8))
+          totaldesired  = int(decimal.Decimal(str(offer[0]))*decimal.Decimal(1e5))
 
         if getdivisible_MP(propertyidselling):
           availselling = int(offer[1])
           totalselling = int(offer[2])
         else:
-          availselling = int(decimal.Decimal(str(offer[1]))*decimal.Decimal(1e8))
-          totalselling = int(decimal.Decimal(str(offer[2]))*decimal.Decimal(1e8))
+          availselling = int(decimal.Decimal(str(offer[1]))*decimal.Decimal(1e5))
+          totalselling = int(decimal.Decimal(str(offer[2]))*decimal.Decimal(1e5))
 
         origprice     = offer[3]
         remaindesired = math.ceil(availselling*origprice)
         if remaindesired > totaldesired:
           remaindesired = totaldesired
-        efup    = decimal.Decimal((round((decimal.Decimal(remaindesired)/decimal.Decimal(availselling))*decimal.Decimal(1e8))))/decimal.Decimal(1e8)
+        efup    = decimal.Decimal((round((decimal.Decimal(remaindesired)/decimal.Decimal(availselling))*decimal.Decimal(1e5))))/decimal.Decimal(1e5)
         if efup < unitprice or unitprice in [0,None]:
           unitprice=efup
 
@@ -994,7 +994,7 @@ def updatedex2remaining(TxHash, TxDBSerialNum):
       rawtrade['result']['amountremaining']=0
 
     if rawtrade['result']['propertyidforsaleisdivisible']:
-      amountavailable=int(decimal.Decimal(str(rawtrade['result']['amountremaining']))*decimal.Decimal(1e8))
+      amountavailable=int(decimal.Decimal(str(rawtrade['result']['amountremaining']))*decimal.Decimal(1e5))
     else:
       amountavailable=int(rawtrade['result']['amountremaining'])
 
@@ -1022,8 +1022,8 @@ def resetdextable_MP():
         propertyidselling=sale['propertyid']
 
         if getdivisible_MP(propertyidselling):
-          amountaccepted=int(decimal.Decimal(str(sale['amountaccepted']))*decimal.Decimal(1e8))
-          amountavailable=int(decimal.Decimal(str(sale['amountavailable']))*decimal.Decimal(1e8))
+          amountaccepted=int(decimal.Decimal(str(sale['amountaccepted']))*decimal.Decimal(1e5))
+          amountavailable=int(decimal.Decimal(str(sale['amountavailable']))*decimal.Decimal(1e5))
         else:
           amountaccepted=int(sale['amountaccepted'])
           amountavailable=int(sale['amountavailable'])
@@ -1031,9 +1031,9 @@ def resetdextable_MP():
         totalselling=amountaccepted
 
         #convert all btc stuff, need additional logic for metadex
-        amountdesired=int(decimal.Decimal(str(sale['bitcoindesired']))*decimal.Decimal(1e8))
-        minimumfee=int(decimal.Decimal(str(sale['minimumfee']))*decimal.Decimal(1e8))
-        unitprice=int(decimal.Decimal(str(sale['unitprice']))*decimal.Decimal(1e8))
+        amountdesired=int(decimal.Decimal(str(sale['bitcoindesired']))*decimal.Decimal(1e5))
+        minimumfee=int(decimal.Decimal(str(sale['minimumfee']))*decimal.Decimal(1e5))
+        unitprice=int(decimal.Decimal(str(sale['unitprice']))*decimal.Decimal(1e5))
 
         seller=sale['seller']
         timelimit=sale['timelimit']
@@ -1061,8 +1061,8 @@ def syncAddress(Address, Protocol):
 
       #get available/reserved balances
       if getdivisible_MP(PropertyID):
-        Available=int(decimal.Decimal(str(property['balance']))*decimal.Decimal(1e8))
-        Reserved=int(decimal.Decimal(str(property['reserved']))*decimal.Decimal(1e8))
+        Available=int(decimal.Decimal(str(property['balance']))*decimal.Decimal(1e5))
+        Reserved=int(decimal.Decimal(str(property['reserved']))*decimal.Decimal(1e5))
       else:
         Available=int(property['balance'])
         Available=int(property['reserved'])
@@ -1122,7 +1122,7 @@ def updateFeatureActivations(featureid, txdbserialnum=None):
 def resetbalances_MP(pidlist=None):
     printdebug(("Starting resetbalances_MP"),8)
     #for now sync / reset balance data from omnicore balance list
-    Protocol="Omni"
+    Protocol="Zurshares"
 
     #get DEx sales to process 'accepted' amounts
     DExSales=getactivedexsells_MP()
@@ -1166,10 +1166,10 @@ def resetbalances_MP(pidlist=None):
             accept=0
 
         if property['divisible']:
-          BalanceAvailable=int(decimal.Decimal(str(addr['balance']))*decimal.Decimal(1e8))
-          BalanceReserved=int(decimal.Decimal(str(addr['reserved']))*decimal.Decimal(1e8))
-          BalanceFrozen=int(decimal.Decimal(str(addr['frozen']))*decimal.Decimal(1e8))
-          BalanceAccepted=int(decimal.Decimal(str(accept))*decimal.Decimal(1e8))
+          BalanceAvailable=int(decimal.Decimal(str(addr['balance']))*decimal.Decimal(1e5))
+          BalanceReserved=int(decimal.Decimal(str(addr['reserved']))*decimal.Decimal(1e5))
+          BalanceFrozen=int(decimal.Decimal(str(addr['frozen']))*decimal.Decimal(1e5))
+          BalanceAccepted=int(decimal.Decimal(str(accept))*decimal.Decimal(1e5))
         else:
           BalanceAvailable=int(addr['balance'])
           BalanceReserved=int(addr['reserved'])
@@ -1194,7 +1194,7 @@ def checkbalances_MP(pidlist=None):
     printdebug(("Starting checkbalances_MP"),8)
 
     #for now sync / reset balance data from omnicore balance list
-    Protocol="Omni"
+    Protocol="Zurshares"
 
     #get DEx sales to process 'accepted' amounts
     DExSales=getactivedexsells_MP()
@@ -1231,9 +1231,9 @@ def checkbalances_MP(pidlist=None):
             accept=0
 
         if property['divisible']:
-          BalanceAvailable=int(decimal.Decimal(str(addr['balance']))*decimal.Decimal(1e8))
-          BalanceReserved=int(decimal.Decimal(str(addr['reserved']))*decimal.Decimal(1e8))
-          BalanceAccepted=int(decimal.Decimal(str(accept))*decimal.Decimal(1e8))
+          BalanceAvailable=int(decimal.Decimal(str(addr['balance']))*decimal.Decimal(1e5))
+          BalanceReserved=int(decimal.Decimal(str(addr['reserved']))*decimal.Decimal(1e5))
+          BalanceAccepted=int(decimal.Decimal(str(accept))*decimal.Decimal(1e5))
         else:
           BalanceAvailable=int(addr['balance'])
           BalanceReserved=int(addr['reserved'])
@@ -1445,12 +1445,12 @@ def updateProperty(PropertyID, Protocol, LastTxDBSerialNum=None):
       reorg = False
 
     if PropertyID == 0:
-      rawprop = {"name":"ZUR", "blocktime":1231006505, "data":"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks", "issuer":"Satoshi Nakamoto", "url":"http://www.bitcoin.org", "propertyid":0 ,"divisible": True}
+      rawprop = {"name":"ZUR", "blocktime":1388470437, "data":"Sat Dec 31 IST 2013 Zurcoin crypto", "issuer":"Daniel Mark Harrison", "url":"http://www.zurcoin.org", "propertyid":0 ,"divisible": True}
       Issuer = rawprop['issuer']
       try:
         r = requests.get('https://blockchain.info/q/totalbc')
         amt=int(r.text)
-        rawprop['totaltokens'] = str(int(amt/1e8))+".00000000"
+        rawprop['totaltokens'] = str(int(amt/1e5))+".00000000"
       except:
         pass
     else:
@@ -1465,9 +1465,9 @@ def updateProperty(PropertyID, Protocol, LastTxDBSerialNum=None):
       if PropertyID in [1,2]:
         rawprop['blocktime']=1377994675
         if PropertyID == 1:
-          rawprop['name']=u'Omni Token'
+          rawprop['name']=u'Zurshares Token'
         elif PropertyID == 2:
-          rawprop['name']=u'Test Omni Token'
+          rawprop['name']=u'Test Zurshares Token'
 
       #if TxType == 51 or TxType == 53:
       try:
@@ -1475,7 +1475,7 @@ def updateProperty(PropertyID, Protocol, LastTxDBSerialNum=None):
         rawprop = dict(rawprop.items() + getcrowdsale_MP(PropertyID)['result'].items())
         #closed/ended crowdsales can generate extra tokens for issuer. handle that here
         if rawprop['divisible']:
-          addedissuertokens = int(decimal.Decimal(str(rawprop['addedissuertokens']))*decimal.Decimal(1e8))
+          addedissuertokens = int(decimal.Decimal(str(rawprop['addedissuertokens']))*decimal.Decimal(1e5))
         else:
           addedissuertokens = int(rawprop['addedissuertokens'])
         issuer=rawprop['issuer']
@@ -1656,7 +1656,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
 
     TxHash = rawtx['result']['txid']
 
-    if Protocol == "Bitcoin":
+    if Protocol == "Zurcoin":
       PropertyID=0
       Ecosystem=None
       #process all outputs
@@ -1666,7 +1666,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
           AddressRole="recipient"
           AddressTxIndex=output['n']
           #store values as satoshi/willits etc''. Client converts
-          BalanceAvailableCreditDebit=int(decimal.Decimal(output['value'])*decimal.Decimal("1e8"))
+          BalanceAvailableCreditDebit=int(decimal.Decimal(output['value'])*decimal.Decimal("1e5"))
           #multisigs have more than 1 address, make sure we find/credit all multisigs for a tx
           for addr in output['scriptPubKey']['addresses']:
             dbExecute("insert into addressesintxs "
@@ -1694,8 +1694,8 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
                     " and addresstxindex=%s and addressrole='recipient'",
                     (TxDBSerialNum, Protocol, LinkedTxDBSerialNum, prevtxindex) )
 
-          BalanceAvailableCreditDebit=int(decimal.Decimal(prevtx['result']['vout'][_input['vout']]['value'])*decimal.Decimal("1e8")*decimal.Decimal(-1))
-          #BalanceAvailableCreditDebit=int(prevtx['result']['vout'][_input['vout']]['value'] * 1e8 * -1)
+          BalanceAvailableCreditDebit=int(decimal.Decimal(prevtx['result']['vout'][_input['vout']]['value'])*decimal.Decimal("1e5")*decimal.Decimal(-1))
+          #BalanceAvailableCreditDebit=int(prevtx['result']['vout'][_input['vout']]['value'] * 1e5 * -1)
           #multisigs have more than 1 address, make sure we find/credit all multisigs for a tx
           for addr in prevtx['result']['vout'][_input['vout']]['scriptPubKey']['addresses']:
             dbExecute("insert into addressesintxs "
@@ -1706,7 +1706,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
             updateAddrStats(addr,Protocol,TxDBSerialNum,Block)
           AddressTxIndex+=1
 
-    elif Protocol == "Omni":
+    elif Protocol == "Zurshares":
       AddressTxIndex=0
       AddressRole="sender"
       txtype=get_TxType(rawtx['result']['type'])
@@ -1751,7 +1751,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
           #if rawtx['result']['divisible']:
           try:
             if getDivisible(rawtx):
-              value=int(decimal.Decimal(str(rawtx['result']['amount']))*decimal.Decimal(1e8))
+              value=int(decimal.Decimal(str(rawtx['result']['amount']))*decimal.Decimal(1e5))
             else:
               value=int(rawtx['result']['amount'])
           except:
@@ -1793,7 +1793,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
            #sendToOwners(Address, value, PropertyID, Protocol, TxDBSerialNum)
            rawsto=getsto_MP(rawtx['result']['txid'])
            #sto fee is in MSC (and gets burned) so convert before entering it
-           stofee=-int(decimal.Decimal(str(rawsto['result']['totalstofee']))*decimal.Decimal(1e8))
+           stofee=-int(decimal.Decimal(str(rawsto['result']['totalstofee']))*decimal.Decimal(1e5))
            if Ecosystem in ['Test','test']:
              feeid=2
              feeEco=Ecosystem
@@ -1815,7 +1815,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
            for recv in rawsto['result']['recipients']:
              #if rawtx['result']['divisible']:
              if isDivisible:
-               rBalance=int(decimal.Decimal(str(recv['amount']))*decimal.Decimal(1e8))
+               rBalance=int(decimal.Decimal(str(recv['amount']))*decimal.Decimal(1e5))
              else:
                rBalance=int(recv['amount'])
              rAddress=recv['address']
@@ -1857,7 +1857,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
           PropertyID=send['propertyid']
           try:
             if send['divisible']:
-              BalanceAvailableCreditDebit=int(decimal.Decimal(str(send['amount']))*decimal.Decimal(1e8))
+              BalanceAvailableCreditDebit=int(decimal.Decimal(str(send['amount']))*decimal.Decimal(1e5))
             else:
               BalanceAvailableCreditDebit=int(send['amount'])
             BalanceAvailableCreditDebitNEG=-BalanceAvailableCreditDebit
@@ -1968,7 +1968,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
           PropertyIDPaid = 0
 
           if getdivisible_MP(PropertyIDBought):
-            AmountBought=int(decimal.Decimal(str(payment['amountbought']))*decimal.Decimal(1e8))
+            AmountBought=int(decimal.Decimal(str(payment['amountbought']))*decimal.Decimal(1e5))
           else:
             AmountBought=int(payment['amountbought'])
           AmountBoughtNeg=(AmountBought * -1)
@@ -2023,7 +2023,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
         ##Sell offer cancel doesn't display an amount from core, not sure what we do here yet
         AddressRole='seller'
         if rawtx['result']['propertyidforsaleisdivisible']:
-          value=int(decimal.Decimal(str(rawtx['result']['amountforsale']))*decimal.Decimal(1e8))
+          value=int(decimal.Decimal(str(rawtx['result']['amountforsale']))*decimal.Decimal(1e5))
         else:
           value=int(rawtx['result']['amountforsale'])
         value_neg=(value*-1)
@@ -2060,12 +2060,12 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
             updateAddrStats(BuyerAddress,Protocol,TxDBSerialNum,Block)
 
             if rawtx['result']['propertyidforsaleisdivisible']:
-              amountsold = int(decimal.Decimal(str(match['amountsold']))*decimal.Decimal(1e8))
+              amountsold = int(decimal.Decimal(str(match['amountsold']))*decimal.Decimal(1e5))
             else:
               amountsold = int(match['amountsold'])
 
             if rawtx['result']['propertyiddesiredisdivisible']:
-              amountreceived = int(decimal.Decimal(str(match['amountreceived']))*decimal.Decimal(1e8))
+              amountreceived = int(decimal.Decimal(str(match['amountreceived']))*decimal.Decimal(1e5))
             else:
               amountreceived = int(match['amountreceived'])
 
@@ -2129,7 +2129,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
             PropertyID=match['propertyid']
 
             if getdivisible_MP(PropertyID):
-              value = int(decimal.Decimal(str(match['amountunreserved']))*decimal.Decimal(1e8))
+              value = int(decimal.Decimal(str(match['amountunreserved']))*decimal.Decimal(1e5))
             else:
               value = int(match['amountunreserved'])
 
@@ -2194,8 +2194,8 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
         PropertyID = rawtx['result']['purchasedpropertyid']
 
         if getdivisible_MP(PropertyID):
-          IssuerCreditDebit = int(decimal.Decimal(str(rawtx['result']['issuertokens']))*decimal.Decimal(1e8))
-          BalanceAvailableCreditDebit = int(decimal.Decimal(str(rawtx['result']['purchasedtokens']))*decimal.Decimal(1e8))
+          IssuerCreditDebit = int(decimal.Decimal(str(rawtx['result']['issuertokens']))*decimal.Decimal(1e5))
+          BalanceAvailableCreditDebit = int(decimal.Decimal(str(rawtx['result']['purchasedtokens']))*decimal.Decimal(1e5))
         else:
           IssuerCreditDebit = int(rawtx['result']['issuertokens'])
           BalanceAvailableCreditDebit = int(rawtx['result']['purchasedtokens'])
@@ -2366,8 +2366,8 @@ def insertTx(rawtx, Protocol, blockheight, seq, TxDBSerialNum):
     TxBlockNumber = blockheight
     #TxDBSerialNum = dbserialnum
 
-    if Protocol == "Bitcoin":
-      #Bitcoin is only simple send, type 0
+    if Protocol == "Zurcoin":
+      #Zurcoin is only simple send, type 0
       TxType=0
       TxVersion=rawtx['result']['version']
       TxState= "valid"
@@ -2375,7 +2375,7 @@ def insertTx(rawtx, Protocol, blockheight, seq, TxDBSerialNum):
       TxSubmitTime = datetime.datetime.utcfromtimestamp(rawtx['result']['time'])
       TxClass = 0
 
-    elif Protocol == "Omni":
+    elif Protocol == "Zurshares":
       #currently type a text output from omnicore 'Simple Send' and version is unknown
       TxType= get_TxType(rawtx['result']['type'])
       TxVersion=0

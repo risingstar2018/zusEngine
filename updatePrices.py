@@ -62,7 +62,7 @@ def getfixedprice(desiredvalue, base):
   # 16 | RUB       # 17 | MXN       # 18 | BRL       # 19 | PLN
   # 20 | ZAR       # 21 | JPY
 
-  ROWS=dbSelect("select rate1for2 from exchangerates where protocol1='Fiat' and propertyid1=%s and protocol2='Bitcoin' and propertyid2=0 "
+  ROWS=dbSelect("select rate1for2 from exchangerates where protocol1='Fiat' and propertyid1=%s and protocol2='Zurcoin' and propertyid2=0 "
                 "order by asof desc limit 1",[int(base)])
   if len(ROWS)>0:
     return desiredvalue / ROWS[0][0]
@@ -126,7 +126,7 @@ def updateZUR():
         if fpid == -1:
           new.append(abv)
         else:
-          upsertRate('Fiat', fpid, 'Bitcoin', 0, value, source, timestamp)
+          upsertRate('Fiat', fpid, 'Zurcoin', 0, value, source, timestamp)
       if len(new) > 0:
         printdebug(("New Symbols not in db",new),5)
     except requests.exceptions.RequestException as e:
@@ -219,7 +219,7 @@ def updateZUSSP():
         value=0
         source='Local'
 
-      upsertRate('Bitcoin', 0, 'Omni', sp, value, source)
+      upsertRate('Zurcoin', 0, 'Omni', sp, value, source)
 
   except requests.exceptions.RequestException as e:
     #error or timeout, skip for now

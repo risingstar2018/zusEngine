@@ -25,7 +25,7 @@ def dumpblocks_csv(csvwb, block_data, Protocol, block_height, txcount):
 def dumptxaddr_csv(csvwb, rawtx, Protocol, TxDBSerialNum):
     TxHash = rawtx['result']['txid']
 
-    if Protocol == "Bitcoin":
+    if Protocol == "Zurcoin":
       PropertyID=0
       #process all outputs
       for output in rawtx['result']['vout']:
@@ -34,7 +34,7 @@ def dumptxaddr_csv(csvwb, rawtx, Protocol, TxDBSerialNum):
           AddressRole="recipient"
           AddressTxIndex=output['n']
           #store values as satoshi/willits etc''. Client converts
-          BalanceAvailableCreditDebit=int(decimal.Decimal(output['value'])*decimal.Decimal("1e8"))
+          BalanceAvailableCreditDebit=int(decimal.Decimal(output['value'])*decimal.Decimal("1e5"))
           #multisigs have more than 1 address, make sure we find/credit all multisigs for a tx
           for addr in output['scriptPubKey']['addresses']:
             row={'Address': addr, 'PropertyID': PropertyID, 'Protocol': Protocol, 'TxDBSerialNum': TxDBSerialNum, 'AddressTxIndex': AddressTxIndex, 
@@ -49,8 +49,8 @@ def dumptxaddr_csv(csvwb, rawtx, Protocol, TxDBSerialNum):
           AddressRole="sender"
           #existing json doesn't have raw address only prev tx. Get prev tx to decipher address/values
           prevtx=getrawtransaction(input['txid'])
-          BalanceAvailableCreditDebit=int(decimal.Decimal(prevtx['result']['vout'][input['vout']]['value'])*decimal.Decimal("1e8")*decimal.Decimal(-1))
-          #BalanceAvailableCreditDebit=int(prevtx['result']['vout'][input['vout']]['value'] * 1e8 * -1)
+          BalanceAvailableCreditDebit=int(decimal.Decimal(prevtx['result']['vout'][input['vout']]['value'])*decimal.Decimal("1e5")*decimal.Decimal(-1))
+          #BalanceAvailableCreditDebit=int(prevtx['result']['vout'][input['vout']]['value'] * 1e5 * -1)
           #multisigs have more than 1 address, make sure we find/credit all multisigs for a tx
           for addr in prevtx['result']['vout'][input['vout']]['scriptPubKey']['addresses']:
             row={'Address': addr, 'PropertyID': PropertyID, 'Protocol': Protocol, 'TxDBSerialNum': TxDBSerialNum, 'AddressTxIndex': AddressTxIndex,
@@ -71,7 +71,7 @@ def dumptxaddr_csv(csvwb, rawtx, Protocol, TxDBSerialNum):
       if type != -22:
         PropertyID= rawtx['result']['propertyid']
         if rawtx['result']['divisible']:
-          value=int(decimal.Decimal(rawtx['result']['amount'])*decimal.Decimal(1e8))
+          value=int(decimal.Decimal(rawtx['result']['amount'])*decimal.Decimal(1e5))
         else:
           value=int(rawtx['result']['amount'])
         value_neg=(value*-1)
@@ -143,13 +143,13 @@ def dumptxaddr_csv(csvwb, rawtx, Protocol, TxDBSerialNum):
           #AddressTxIndex =  Do we need to change this?
 
           if getdivisible_MP(PropertyIDBought):
-            AmountBought=int(decimal.Decimal(payment['amountbought'])*decimal.Decimal(1e8))
+            AmountBought=int(decimal.Decimal(payment['amountbought'])*decimal.Decimal(1e5))
           else:
             AmountBought=int(payment['amountbought'])
           AmountBoughtNeg=(AmountBought * -1)
 
           #if (PropertyIDPaid == 0 ) or getdivisible_MP(PropertyIDPaid):
-          #  AmountPaid=int(decimal.Decimal(payment['amountpaid'])*decimal.Decimal(1e8))
+          #  AmountPaid=int(decimal.Decimal(payment['amountpaid'])*decimal.Decimal(1e5))
           #else:
           #  AmountPaid=int(payment['amountpaid'])
           #AmountPaidNeg=(AmountPaid * -1)
@@ -231,7 +231,7 @@ def dumptxaddr_csv(csvwb, rawtx, Protocol, TxDBSerialNum):
         cstx = getcrowdsale_MP(PropertyID)
         if cstx['result']['percenttoissuer'] > 0:
           if getdivisible_MP(PropertyID):
-            BalanceAvailableCreditDebit = int(decimal.Decimal(rawtx['result']['amount'])*decimal.Decimal(cstx['result']['tokensperunit'])*(decimal.Decimal(cstx['result']['percenttoissuer'])/decimal.Decimal(100))*decimal.Decimal(1e8))
+            BalanceAvailableCreditDebit = int(decimal.Decimal(rawtx['result']['amount'])*decimal.Decimal(cstx['result']['tokensperunit'])*(decimal.Decimal(cstx['result']['percenttoissuer'])/decimal.Decimal(100))*decimal.Decimal(1e5))
           else:  
             BalanceAvailableCreditDebit = int(decimal.Decimal(rawtx['result']['amount'])*decimal.Decimal(cstx['result']['tokensperunit'])*decimal.Decimal((cstx['result']['percenttoissuer'])/decimal.Decimal(100)))
         row={'Address': Address, 'PropertyID': PropertyID, 'Protocol': Protocol, 'TxDBSerialNum': TxDBSerialNum, 'AddressTxIndex': AddressTxIndex,
@@ -242,7 +242,7 @@ def dumptxaddr_csv(csvwb, rawtx, Protocol, TxDBSerialNum):
         #now update with crowdsale specific property details
         Address = rawtx['result']['sendingaddress']
         if getdivisible_MP(PropertyID):
-          value=int(decimal.Decimal(rawtx['result']['purchasedtokens'])*decimal.Decimal(1e8))
+          value=int(decimal.Decimal(rawtx['result']['purchasedtokens'])*decimal.Decimal(1e5))
         else:
           value=int(rawtx['result']['purchasedtokens'])
         value_neg=(value*-1)
@@ -272,8 +272,8 @@ def dumptx_csv(csvwb, rawtx, Protocol, block_height, seq, dbserialnum):
     TxSeqInBlock= seq
     TxDBSerialNum = dbserialnum
 
-    if Protocol == "Bitcoin":
-      #Bitcoin is only simple send, type 0
+    if Protocol == "Zurcoin":
+      #Zurcoin is only simple send, type 0
       TxType=0
       TxVersion=rawtx['result']['version']
       TxState= "valid"

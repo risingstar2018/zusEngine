@@ -56,7 +56,7 @@ for tx in missing:
 
       if Valid:
         if getdivisible_MP(PropertyIDBought):
-         AmountBought=int(decimal.Decimal(payment['amountbought'])*decimal.Decimal(1e8))
+         AmountBought=int(decimal.Decimal(payment['amountbought'])*decimal.Decimal(1e5))
         else:
           AmountBought=int(payment['amountbought'])
         updateAccept(Sender, Receiver, AmountBought, PropertyIDBought, TxDBSerialNum)
