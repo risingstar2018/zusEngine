@@ -9,7 +9,7 @@
    See scripts/db-init.sh for an example.
 */
 
-drop role if exists :omniengine, :omniwww;
+drop role if exists :omniengine :omniwww;
 create user :omniengine unencrypted password :omnienginePassword;
 create user :omniwww unencrypted password :omniwwwPassword;
 
