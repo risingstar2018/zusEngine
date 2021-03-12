@@ -1,11 +1,11 @@
 /* Load the initial known protocols */
 insert into Protocols values (
-	'zurcoin', 'zurcoin', 'http://zurcoin.org'
+	'Zurcoin', 'Zurcoin', 'http://zurcoin.org'
 )
 ;
 
 insert into Protocols values (
-	'Zurshares', 'zurcoin', 'http://zurbank.io'
+	'Zurshares', 'Zurcoin', 'http://zurbank.io'
 )
 ;
 
@@ -14,9 +14,9 @@ insert into Protocols values (
 )
 ;
 
-/*Load the zurcoin property*/
+/*Load the Zurcoin property*/
 insert into smartproperties (Protocol, propertyid, issuer, createtxdbserialnum, lasttxdbserialnum, propertyname, propertytype, propertydata) values (
-     'zurcoin', 0, 'Daniel Mark Harrison', -1, -1, 'ZUR', 2, '{"name":"ZUR", "blocktime":1388470437, "data":"Sat Dec 31 IST 2013 Zurcoin crypto", "issuer":"Daniel Mark Harrison", "url":"http://www.zurcoin.org", "propertyid":0 ,"divisible": true}');
+     'Zurcoin', 0, 'Daniel Mark Harrison', -1, -1, 'ZUR', 2, '{"name":"ZUR", "blocktime":1388470437, "data":"Sat Dec 31 IST 2013 Zurcoin crypto", "issuer":"Daniel Mark Harrison", "url":"http://www.zurcoin.org", "propertyid":0 ,"divisible": true}');
 
 /*Load the list of Fiat Currencies we track */
 
