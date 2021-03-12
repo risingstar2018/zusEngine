@@ -58,7 +58,7 @@ else:
     firstMPtxBlock=252317
 
   #get last known block processed from db
-  currentBlock=dbSelect("select max(blocknumber) from Blocks", None)[0][0]
+  currentBlock=dbSelect("select max(blocknumber) from blocks", None)[0][0]
   printdebug(("Current block is ",currentBlock), 0)
   if currentBlock is not None:
     currentBlock=currentBlock+1

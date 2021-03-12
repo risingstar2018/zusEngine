@@ -134,7 +134,7 @@ create index AddressIndex on AddressesInWallets (Address, protocol, propertyid)
 ;
 
 /* block header information, from https://en.bitcoin.it/wiki/Protocol_specification & getblock RPC JSON */
-create table if not exists Blocks (
+create table if not exists blocks (
 	BlockNumber integer not null
 	, Protocol Protocol not null		/* initially 'Zurcoin' */
 	, BlockTime timestamp(0) not null	/* timestamp recording when this block was created (Will overflow in 2106) */
@@ -152,7 +152,7 @@ create table if not exists Blocks (
 )
 ;
 /* to find block info by block number */
-create index BlockNumTime on Blocks (BlockNumber, Protocol, BlockTime)
+create index BlockNumTime on blocks (BlockNumber, Protocol, BlockTime)
 ;
 
 /* transaction stats */
@@ -192,7 +192,7 @@ create table if not exists Transactions (
         , TxClass integer null						/* The decoded Transaction Encoding Class */
 
 	, primary key (ID)
-/*	, foreign key (Protocol, TxBlockNumber) references Blocks */
+/*	, foreign key (Protocol, TxBlockNumber) references blocks */
 )
 ;
 /* index for searching hash and protocol */
