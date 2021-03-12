@@ -193,11 +193,11 @@ else:
       expireCrowdsales(block_data['result']['time'], Protocol)
       #exodus address generates dev msc, sync our balance to match the generated balanace
       if config.TESTNET:
-        syncAddress('mpexoDuSkGGqvqrkrjiFng38QPkJQVFyqv', Protocol)
+        syncAddress('qALrKLGjQnqAf8S3u6B9oFVs4dwmGg83Z5', Protocol)
         #upadate temp orderbook
         #updateorderblob()
       else:
-        syncAddress('1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P', Protocol)
+        syncAddress('UrpY6GsjF5WK33TzeiS8mQCPxzMdvbizp6', Protocol)
 
       #Also make sure we update the json data in SmartProperties table used by exchange view
       updateProperty(1,"Zurshares")
