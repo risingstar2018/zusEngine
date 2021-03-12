@@ -26,7 +26,7 @@
  *	sender sent a Simple Send
  */
 create type AddressRole as enum ('buyer', 'issuer', 'participant', 'payee', 'recipient', 'seller', 'sender', 'payer', 'feepayer');
-create type Protocol as enum ('Fiat', 'Zurcoin', 'Omni');
+create type Protocol as enum ('Fiat', 'Zurcoin', 'Zurshares');
 create type Ecosystem as enum ('Production', 'Test', 'All');
 create type ObjectType as enum ('address', 'property', 'tx_version_type');
 create type TxState as enum ('pending', 'valid', 'not valid');
@@ -82,7 +82,7 @@ create table if not exists WalletBackups (
  */
 create table if not exists AddressBalances (
 	Address	varchar(64)				/* Zurcoin addresses are 34 chars */
-	, Protocol Protocol not null default 'Zurcoin'	/* initially 'Zurcoin' or 'Omni' */
+	, Protocol Protocol not null default 'Zurcoin'	/* initially 'Zurcoin' or 'Zurshares' */
 	, PropertyID bigint not null default 0		/* Zurcoin */
 	, Ecosystem Ecosystem null
 	, BalanceAvailable numeric(19) not null default 0
@@ -104,7 +104,7 @@ create index ab_nonzero on addressbalances (balanceavailable, balancereserved, b
 create table if not exists AddressStats (
         ID Serial
         , Address varchar(64) not null                                    /* Zurcoin addresses are 34 chars */
-        , Protocol Protocol not null default 'Omni'                       /* initially 'Zurcoin' or 'Omni' */
+        , Protocol Protocol not null default 'Zurshares'                       /* initially 'Zurcoin' or 'Zurshares' */
         , TxCount numeric(19) not null default 0                          /* Count of txs address is involved in */
         , LastTxDBSerialNum int8 not null default 0                       /* last tx that affected this currency for this address, null if no tx's */
         , BlockNumber integer not null                                    /* Last block address was seen in */
@@ -120,7 +120,7 @@ create table if not exists AddressStats (
 create table if not exists AddressesInWallets (		/* many-to-many */
 	Address varchar(64) not null		/* Address must exist in the AddressBalances table */
 	, WalletID uuid	not null		/* WalletID must exist in the Wallets table */
-	, Protocol Protocol not null default 'Zurcoin'  /* initially 'Zurcoin' or 'Omni' */
+	, Protocol Protocol not null default 'Zurcoin'  /* initially 'Zurcoin' or 'Zurshares' */
 	, PropertyID bigint not null default 0 /* Zurcoin */
 
 	, primary key (WalletID, Address, protocol, propertyid)
@@ -158,7 +158,7 @@ create index BlockNumTime on Blocks (BlockNumber, Protocol, BlockTime)
 /* transaction stats */
 create table if not exists TxStats (
         ID Serial
-        , Protocol Protocol not null default 'Omni'   /* initially 'Omni' */
+        , Protocol Protocol not null default 'Zurshares'   /* initially 'Zurshares' */
         , BlockNumber integer not null
         , BlockTime timestamp(0) not null             /* timestamp recording when this block was created (Will overflow in 2106) */
         , TxCount integer null                        /* Number of transaction entries in past 24 hours */
@@ -179,9 +179,9 @@ create index txstats_block on txstats (BlockNumber, Protocol, BlockTime)
 create table if not exists Transactions (
         ID Serial
 	, TxHash varchar(64) not null					/* varchar so we can use LIKE & other string matching  */
-	, Protocol Protocol not null					/* initially 'Zurcoin' or 'Omni' */
+	, Protocol Protocol not null					/* initially 'Zurcoin' or 'Zurshares' */
 	, TxDBSerialNum serial8 unique					/* db internal identifier for each tx, for faster joins */
-	, TxType integer not null					/* from the RPC result for an 'Omni' tx, 0 for 'Zurcoin' tx's */
+	, TxType integer not null					/* from the RPC result for an 'Zurshares' tx, 0 for 'Zurcoin' tx's */
 	, TxVersion smallint not null					/* from the RPC result */
 	, Ecosystem Ecosystem null					/* Null for 'Zurcoin' tx's */
 	, TxRecvTime timestamp(0) without time zone null DEFAULT now()	/* when it was sent, if known */
@@ -219,7 +219,7 @@ create index TxSeq on Transactions (TxBlockNumber, TxSeqInBlock)
 create table if not exists TxJSON (
         ID Serial
 	, TxDBSerialNum int8 not null		/* db internal identifier for each tx, for faster joins */
-	, Protocol Protocol not null		/* initially 'Zurcoin' or 'Omni' */
+	, Protocol Protocol not null		/* initially 'Zurcoin' or 'Zurshares' */
 	, TxData jsonb not null			/* the tx message fields */
 
 	, primary key (id)
@@ -250,7 +250,7 @@ create index txj_json_raddress on txjson (cast(txdata->>'referenceaddress' as te
 create table if not exists AddressesInTxs (					/* many-to-many */
 	Address	varchar(64) not null
 	, PropertyID bigint not null
-	, Protocol Protocol not null			/* initially 'Zurcoin' or 'Omni' */
+	, Protocol Protocol not null			/* initially 'Zurcoin' or 'Zurshares' */
 	, TxDBSerialNum int8 not null default -1	/* db internal identifier for each tx, for faster joins */
 	, AddressTxIndex int2 not null			/* position in the input or output list */
 	, AddressRole AddressRole not null
@@ -282,7 +282,7 @@ create index aitdbser_idx on addressesintxs (txdbserialnum)
 create table if not exists ToLinkAddressesInTxs (		/* many-to-many */
 	Address	varchar(64) not null
 	, PropertyID bigint not null
-	, Protocol Protocol not null			/* initially 'Zurcoin' or 'Omni' */
+	, Protocol Protocol not null			/* initially 'Zurcoin' or 'Zurshares' */
 	, TxDBSerialNum int8 not null default -1	/* db internal identifier for each tx, for faster joins */
 	, AddressTxIndex int2 not null			/* position in the input or output list */
 	, LinkedTxDBSerialNum int8 not null default -1	/* tx with the associated output for inputs, or with the associated input for outputs */
@@ -464,7 +464,7 @@ create index Buyers on OfferAccepts (Buyer)
 /* dictionary of known protocols */
 create table if not exists Protocols (
 	Protocol Protocol unique not null
-	, BaseProtocol Protocol not null	/* e.g. Zurcoin is the base of Omni, Protocol = BaseProtocol if a base protocol */
+	, BaseProtocol Protocol not null	/* e.g. Zurcoin is the base of Zurshares, Protocol = BaseProtocol if a base protocol */
 	, URL varchar(256) null
 )
 ;

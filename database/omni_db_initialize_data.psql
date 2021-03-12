@@ -1,13 +1,11 @@
 /* Load the initial known protocols */
 insert into Protocols values (
 	'Zurcoin', 'Zurcoin', 'http://zurcoin.org'
-)
-;
+);
 
 insert into Protocols values (
 	'Zurshares', 'Zurcoin', 'http://zurbank.io'
-)
-;
+);
 
 insert into Protocols values (
         'Fiat', 'Fiat', 'http://en.wikipedia.org/wiki/Fiat_money'
