@@ -2,7 +2,7 @@
 insert into Protocols values (
 	'zurcoin', 'zurcoin', 'http://zurcoin.org'
 )
-; 
+;
 
 insert into Protocols values (
 	'Zurshares', 'zurcoin', 'http://zurbank.io'
