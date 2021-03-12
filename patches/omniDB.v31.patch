@@ -1,14 +1,14 @@
-alter type protocol add value 'Omni';
-update addressbalances set protocol = 'Omni' where protocol='Mastercoin';
-update transactions set protocol = 'Omni' where protocol='Mastercoin';
-update txjson set protocol = 'Omni' where protocol='Mastercoin';
-update AddressesInTxs set protocol = 'Omni' where protocol='Mastercoin';
-update SmartProperties set protocol = 'Omni' where protocol='Mastercoin';
-update SmartProperties set propertyname = 'Omni' where propertyname='Mastercoin' and propertyid=1;
-update SmartProperties set propertyname = 'Test Omni' where propertyname='Test Mastercoin' and propertyid=2;
-update PropertyHistory set protocol = 'Omni' where protocol='Mastercoin';
-update ExchangeRates set protocol2 = 'Omni' where protocol2='Mastercoin';
-update protocols set protocol = 'Omni', url='http://zurbank.io' where protocol='Mastercoin';
+alter type protocol add value 'Zurshares';
+update addressbalances set protocol = 'Zurshares' where protocol='Mastercoin';
+update transactions set protocol = 'Zurshares' where protocol='Mastercoin';
+update txjson set protocol = 'Zurshares' where protocol='Mastercoin';
+update AddressesInTxs set protocol = 'Zurshares' where protocol='Mastercoin';
+update SmartProperties set protocol = 'Zurshares' where protocol='Mastercoin';
+update SmartProperties set propertyname = 'Zurshares' where propertyname='Mastercoin' and propertyid=1;
+update SmartProperties set propertyname = 'Test Zurshares' where propertyname='Test Mastercoin' and propertyid=2;
+update PropertyHistory set protocol = 'Zurshares' where protocol='Mastercoin';
+update ExchangeRates set protocol2 = 'Zurshares' where protocol2='Mastercoin';
+update protocols set protocol = 'Zurshares', url='http://zurbank.io' where protocol='Mastercoin';
 2.dbInit()
 2.updateProperty(1,"Zurshares")
 2.updateProperty(2,"Zurshares")
