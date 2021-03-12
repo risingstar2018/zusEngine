@@ -10,8 +10,8 @@ import urllib3.contrib.pyopenssl
 urllib3.contrib.pyopenssl.inject_into_urllib3()
 
 def updatePrices():
-  updateBTC()
-  updateOMNISP()
+  updateZUR()
+  updateZUSSP()
   dbCommit()
 
 def fiat2propertyid(abv):
@@ -24,8 +24,8 @@ def fiat2propertyid(abv):
 
 def getSource(sp):
   try:
-    convert={0:{"cmcid":"1","name":"BTC","source":"coinmarketcap"},
-             1:{"cmcid":"83","name":"OMNI","source":"coinmarketcap"},
+    convert={0:{"cmcid":"1","name":"ZUR","source":"coinmarketcap"},
+             1:{"cmcid":"83","name":"ZUS","source":"coinmarketcap"},
              3:{"cmcid":"291","name":"MAID","source":"coinmarketcap"},
              31:{"cmcid":"825","id":"USDt","name":"Tether USD","source":"fixed","value":1,"base":0},
              39:{"cmcid":"1125","name":"AMP","source":"coinmarketcap"},
@@ -108,14 +108,14 @@ def upsertRate(protocol1, propertyid1, protocol2, propertyid2, rate, source, tim
       dbExecute("insert into exchangerates (protocol1, propertyid1, protocol2, propertyid2, rate1for2, source, asof) select %s,%s,%s,%s,%s,%s,%s",
               (protocol1, propertyid1, protocol2, propertyid2, rate, source, timestamp))
 
-def updateBTC():
+def updateZUR():
     try:
       source='https://apiv2.bitcoinaverage.com/frontend/constants/exchangerates/global'
       r= requests.get( source, timeout=15 )
       curlist=r.json()
       if 'ignored_exchanges' in curlist:
         curlist.pop('ignored_exchanges')
-      btc=curlist['rates']['BTC']['rate']
+      btc=curlist['rates']['ZUR']['rate']
       timestamp=curlist['time']
       new=[]
       for abv in curlist['rates']:
@@ -131,7 +131,7 @@ def updateBTC():
         printdebug(("New Symbols not in db",new),5)
     except requests.exceptions.RequestException as e:
       #error or timeout, skip for now
-      printdebug(("Error updating BTC Price",e),3)
+      printdebug(("Error updating ZUR Price",e),3)
       pass
 
 
@@ -177,7 +177,7 @@ def formatData(sp, source):
 
   return trades
 
-def updateOMNISP():
+def updateZUSSP():
   try:
     #get list of smart properties we know about
     ROWS=dbSelect("select propertyid from smartproperties where propertyid >0 and Protocol='Omni' order by propertyid")
@@ -212,7 +212,7 @@ def updateOMNISP():
             if volume != 0:
               value=(sum / volume)
         except Exception as e:
-          printdebug(("OMNISP Error processing:",e,sp,src),3)
+          printdebug(("ZUSSP Error processing:",e,sp,src),3)
           pass
       else:
         #no Known source for a valuation, set to 0
@@ -223,7 +223,7 @@ def updateOMNISP():
 
   except requests.exceptions.RequestException as e:
     #error or timeout, skip for now
-    printdebug(("Error updating OMNISP Prices",e),3)
+    printdebug(("Error updating ZUSSP Prices",e),3)
     pass
 
 

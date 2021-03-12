@@ -95,7 +95,7 @@ def reorgRollback(block):
     txcount=len(txs)
 
     #================================================================
-    #--------------Remove this block when BTC tx's go in-------------
+    #--------------Remove this block when ZUR tx's go in-------------
     #don't have btc tx's yet in db add extra step to get count of those
     txcount+=dbSelect("select sum(txcount) from blocks where blocknumber >%s",[block])[0][0]
     #================================================================
@@ -451,7 +451,7 @@ def updateAddPending():
 
     counter+=1
    except Exception,e:
-    print "Error: ", e, "\n Could not add OMNI PendingTx: ", rawtx
+    print "Error: ", e, "\n Could not add ZUS PendingTx: ", rawtx
   printdebug(("added ",counter," pending txs to db"),0)
 
 def keyByAddress(item):
@@ -652,7 +652,7 @@ def offerAccept (rawtx, TxDBSerialNum, Block):
 
     #what did the user accept
     propertyidbuying = rawtx['result']['propertyid']
-    #what are they going to have to pay/send to complete. (BTC for now until metadex launch)
+    #what are they going to have to pay/send to complete. (ZUR for now until metadex launch)
     propertyidpaying = 0
     #was it a valid accept, we still insert invalids for displaying to user later
     valid = rawtx['result']['valid']
@@ -1445,7 +1445,7 @@ def updateProperty(PropertyID, Protocol, LastTxDBSerialNum=None):
       reorg = False
 
     if PropertyID == 0:
-      rawprop = {"name":"BTC", "blocktime":1231006505, "data":"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks", "issuer":"Satoshi Nakamoto", "url":"http://www.bitcoin.org", "propertyid":0 ,"divisible": True}
+      rawprop = {"name":"ZUR", "blocktime":1231006505, "data":"The Times 03/Jan/2009 Chancellor on brink of second bailout for banks", "issuer":"Satoshi Nakamoto", "url":"http://www.bitcoin.org", "propertyid":0 ,"divisible": True}
       Issuer = rawprop['issuer']
       try:
         r = requests.get('https://blockchain.info/q/totalbc')
@@ -2166,7 +2166,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
         insertProperty(rawtx, Protocol)
 
       elif txtype == -51:
-        #First deduct the amount the participant sent to 'buyin'  (BTC Amount might need to be excluded?)
+        #First deduct the amount the participant sent to 'buyin'  (ZUR Amount might need to be excluded?)
         AddressRole = 'sender'
         BalanceAvailableCreditDebit = value_neg
 

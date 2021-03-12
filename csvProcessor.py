@@ -80,7 +80,7 @@ while currentBlock <= endBlock:
   Protocol="Bitcoin"
   #Prime tx sequence number based on number of tx
   x=len(block_data['result']['tx'])
-  print  x, "BTC tx"
+  print  x, "ZUR tx"
 
   #Write the blocks table row
   #dumpblocks_csv(blocks_table, block_data, Protocol, height, x)

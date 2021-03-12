@@ -98,7 +98,7 @@ else:
     printdebug("Already up to date",0)
     updateRan=False
   else:
-    rExpireAllBalBTC()
+    rExpireAllBalZUR()
     updateRan=True
 
   #get highest TxDBSerialNum (number of rows in the Transactions table)
@@ -135,7 +135,7 @@ else:
 
       #Find number of tx's in block
       txcount=len(block_data['result']['tx'])
-      printdebug((txcount,"BTC tx"), 1)
+      printdebug((txcount,"ZUR tx"), 1)
 
       #Write the blocks table row
       insertBlock(block_data, Protocol, height, txcount)
@@ -162,7 +162,7 @@ else:
       #Find number of msc tx
       y=len(block_data_MP['result'])
       if y != 0:
-        printdebug((y,"OMNI tx"), 1)
+        printdebug((y,"ZUS tx"), 1)
 
       #count position in block
       x=1
