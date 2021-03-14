@@ -1055,7 +1055,7 @@ def syncAddress(Address, Protocol):
 
     baldata=getallbalancesforaddress_MP(Address)['result']
     DExSales=getactivedexsells_MP()['result']
-
+    Accepted=0
     for property in baldata:
       PropertyID=property['propertyid']
 
