@@ -1086,6 +1086,7 @@ def syncAddress(Address, Protocol):
                   "(Address, Protocol, PropertyID, Ecosystem, BalanceAvailable, BalanceReserved, BalanceAccepted) "
                   "VALUES (%s,%s,%s,%s,%s,%s,%s)",
                   (Address, Protocol, PropertyID, Ecosystem, Available, Reserved, Accepted) )
+        printdebug((Address, Protocol, PropertyID, Ecosystem, Available, Reserved, Accepted),9)                   
       else:
         #address in database update
         dbExecute("UPDATE AddressBalances set BalanceAvailable=%s, BalanceReserved=%s, BalanceAccepted=%s where address=%s and PropertyID=%s",
