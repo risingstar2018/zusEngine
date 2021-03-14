@@ -270,7 +270,7 @@ def updateTxStatsBlock(blocknumber):
       txfsum=dbSelect("select atx.propertyid, sum(abs(atx.balanceavailablecreditdebit)) FILTER (WHERE tx.txstate = 'valid'), sp.propertydata->>'divisible' as divisible, "
                       "count(atx.propertyid) FILTER (WHERE tx.txstate = 'valid') as count, count(atx.propertyid) FILTER (WHERE tx.txstate = 'not valid') AS invalid "
                       "from addressesintxs atx, transactions tx, smartproperties sp "
-                      "where atx.txdbserialnum=tx.txdbserialnum and atx.propertyid=sp.propertyid and sp.protocol='Omni' and "
+                      "where atx.txdbserialnum=tx.txdbserialnum and atx.propertyid=sp.propertyid and sp.protocol='Zurshares' and "
                       "tx.txblocknumber=%s and (atx.addressrole!='buyer' and atx.addressrole!='recipient') group by atx.propertyid, sp.propertydata->>'divisible'",[curblock])
       try:
         VROWS=dbSelect("select sum(cast(value->>'total_usd' as numeric)) from txstats where blocktime >= %s - '1 day'::INTERVAL and blocktime <= %s",(btime,btime))
@@ -292,7 +292,7 @@ def updateTxStatsBlock(blocknumber):
         invalid=t[4]
         if divisible in ['true','True',True]:
           volume=decimal.Decimal(volume)/decimal.Decimal(1e5)
-        rawrate=dbSelect("select rate1for2 from exchangerates where protocol1='Zurcoin' and protocol2='Omni' and propertyid1=0 and propertyid2=%s order by asof desc limit 1",[pid])
+        rawrate=dbSelect("select rate1for2 from exchangerates where protocol1='Zurcoin' and protocol2='Zurshares' and propertyid1=0 and propertyid2=%s order by asof desc limit 1",[pid])
         try:
           rate=decimal.Decimal(rawrate[0][0])
         except:
@@ -379,7 +379,7 @@ def updateAddPending():
     TxClass = getTxClass(txhash)
 
     #check if tx is already in db and skip
-    existing=dbSelect("select * from transactions where txhash=%s and protocol='Omni'",[txhash])
+    existing=dbSelect("select * from transactions where txhash=%s and protocol='Zurshares'",[txhash])
     if len(existing) > 0:
       continue
 
@@ -955,9 +955,9 @@ def updatemarkets(propertyidselling,propertyiddesired,TxDBSerialNum, rawtx):
     dbExecute("with upsert as "
                 "(update markets set unitprice=%s, supply=%s, lastprice=%s, LastTxDBSerialNum=%s, lastupdated=%s where propertyiddesired=%s and propertyidselling=%s returning *), "
               "spd as "
-                "(select propertyname from smartproperties where propertyid=%s and protocol='Omni') "
+                "(select propertyname from smartproperties where propertyid=%s and protocol='Zurshares') "
               "insert into markets (propertyiddesired, desiredname, propertyidselling, sellingname, unitprice, supply, lastprice, lasttxdbserialnum, lastupdated, marketpropertytype) "
-              "select %s,spd.propertyname,%s,sps.propertyname,%s,%s,%s,%s,%s,propertytype from smartproperties sps, spd where propertyid=%s and protocol='Omni' and not exists (select * from upsert)",
+              "select %s,spd.propertyname,%s,sps.propertyname,%s,%s,%s,%s,%s,propertytype from smartproperties sps, spd where propertyid=%s and protocol='Zurshares' and not exists (select * from upsert)",
               (unitprice, supply, lastprice, lasttxdbserialnum, lastupdated, propertyiddesired, propertyidselling,
                propertyiddesired,
                propertyiddesired, propertyidselling, unitprice, supply, lastprice, lasttxdbserialnum, lastupdated,
@@ -965,9 +965,9 @@ def updatemarkets(propertyidselling,propertyiddesired,TxDBSerialNum, rawtx):
     dbExecute("with nulsert as "
                 "(select * from markets where propertyiddesired=%s and propertyidselling=%s), "
               "spd as "
-                "(select propertyname from smartproperties where propertyid=%s and protocol='Omni') "
+                "(select propertyname from smartproperties where propertyid=%s and protocol='Zurshares') "
               "insert into markets (propertyiddesired, desiredname, propertyidselling, sellingname, lasttxdbserialnum, lastupdated, marketpropertytype) "
-              "select %s,spd.propertyname,%s,sps.propertyname,%s,%s,propertytype from smartproperties sps, spd where propertyid=%s and protocol='Omni' and not exists (select * from nulsert)",
+              "select %s,spd.propertyname,%s,sps.propertyname,%s,%s,propertytype from smartproperties sps, spd where propertyid=%s and protocol='Zurshares' and not exists (select * from nulsert)",
               (propertyidselling, propertyiddesired,
                propertyidselling,
                propertyidselling, propertyiddesired, lasttxdbserialnum, lastupdated,
@@ -2018,7 +2018,7 @@ def insertTxAddr(rawtx, Protocol, TxDBSerialNum, Block):
         return
 
       elif txtype == 25:
-        #DEx Phase II: Offer/Accept one Omni Protocol Coin for another
+        #DEx Phase II: Offer/Accept one Zurshares Protocol Coin for another
         #Move the amount from Available balance to reserved for Offer
         ##Sell offer cancel doesn't display an amount from core, not sure what we do here yet
         AddressRole='seller'

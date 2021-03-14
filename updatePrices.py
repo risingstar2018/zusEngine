@@ -180,7 +180,7 @@ def formatData(sp, source):
 def updateZUSSP():
   try:
     #get list of smart properties we know about
-    ROWS=dbSelect("select propertyid from smartproperties where propertyid >0 and Protocol='Omni' order by propertyid")
+    ROWS=dbSelect("select propertyid from smartproperties where propertyid >0 and Protocol='Zurshares' order by propertyid")
     #get Coinmarket Cap data
     #cmcSource="https://api.coinmarketcap.com/v1/ticker/?limit=0"
     cmcSource="https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
@@ -219,7 +219,7 @@ def updateZUSSP():
         value=0
         source='Local'
 
-      upsertRate('Zurcoin', 0, 'Omni', sp, value, source)
+      upsertRate('Zurcoin', 0, 'Zurshares', sp, value, source)
 
   except requests.exceptions.RequestException as e:
     #error or timeout, skip for now

@@ -113,7 +113,7 @@ def estimateFee(blocks=4):
 def gettxout(txid,vout,unconfirmed=True):
     return host.call("gettxout",txid,vout,unconfirmed)
 
-## Omni Specific RPC calls
+## Zurshares Specific RPC calls
 
 def omni_getactivations():
     return host.call("omni_getactivations")
