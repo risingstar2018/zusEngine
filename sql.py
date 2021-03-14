@@ -2470,8 +2470,8 @@ def insertBlock(block_data, Protocol, block_height, txcount):
     BlockNumber=block_height
     dbExecute("INSERT into Blocks"
               "(BlockNumber, Protocol, BlockTime, version, blockhash, prevblock, merkleroot, bits, nonce, size, txcount)"
-              "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-              (BlockNumber, Protocol, BlockTime, version, blockhash, prevblockhash, merkleroot, bits, nonce, size, txcount))
+              "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+              (BlockNumber, 'Zurcoin', '2021-03-09 04:09:39', 113, '0000000026736ec890b8b1df451e12de93d63cf33987acae4bf4add58d158bf9' ,'00000000187cc7c9763cf8500748e2fff15fb0e36d1854912aeecb7e7844e0c1', 'a5c317e4a4afec10e0ed394e38854d19533e403908100ab3e58a7999f69990d8' ,'1c31e6c9' ,1285297761 ,720 ,2))
     printdebug((BlockNumber, Protocol, BlockTime, version, blockhash, prevblockhash, merkleroot, bits, nonce, size, txcount,"\n"), 9)              
 
 
