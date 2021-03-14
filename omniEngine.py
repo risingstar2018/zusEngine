@@ -55,7 +55,7 @@ else:
   if config.TESTNET:
     firstMPtxBlock=263137
   else:
-    firstMPtxBlock=4120000
+    firstMPtxBlock=4020000
 
   #get last known block processed from db
   currentBlock=dbSelect("select max(blocknumber) from blocks", None)[0][0]
