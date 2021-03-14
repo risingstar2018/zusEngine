@@ -1065,7 +1065,7 @@ def syncAddress(Address, Protocol):
         Reserved=int(decimal.Decimal(str(property['reserved']))*decimal.Decimal(1e5))
       else:
         Available=int(property['balance'])
-        Available=int(property['reserved'])
+        Reserved=int(property['reserved'])
 
       #find accepted balances (if exists)
       for x in DExSales:
