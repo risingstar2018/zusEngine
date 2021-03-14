@@ -2468,10 +2468,9 @@ def insertBlock(block_data, Protocol, block_height, txcount):
     nonce = block_data['result']['nonce'];
     size = block_data['result']['size'];
     BlockNumber=block_height
-
     dbExecute("INSERT into Blocks"
               "(BlockNumber, Protocol, BlockTime, version, blockhash, prevblock, merkleroot, bits, nonce, size, txcount)"
-              "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+              "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
               (BlockNumber, Protocol, BlockTime, version, blockhash, prevblockhash, merkleroot, bits, nonce, size, txcount))
     printdebug((BlockNumber, Protocol, BlockTime, version, blockhash, prevblockhash, merkleroot, bits, nonce, size, txcount,"\n"), 9)              
 
