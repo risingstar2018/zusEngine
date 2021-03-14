@@ -67,7 +67,7 @@ else:
 
   #Find most recent block mastercore has available
   endBlock=getinfo()['result']['blocks']
-
+  printdebug((endBlock,"Latest block"), 1)
   #reorg protection/check go back 10 blocks from where we last parsed
   checkBlock=max(currentBlock-10,firstMPtxBlock)
   while checkBlock < currentBlock:
