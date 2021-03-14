@@ -1078,9 +1078,6 @@ def syncAddress(Address, Protocol):
       #check for the address
       rows=dbSelect("select address from AddressBalances where address=%s and Protocol=%s and propertyid=%s",
                     (Address, Protocol, PropertyID) )
-      printdebug((Address, Protocol,"check for the address\n"),9)
-      printdebug("===================",9)
-      printdebug((Address, Protocol, PropertyID, Available, Reserved, Accepted),9) 
       if len(rows) == 0:
         Ecosystem=getEcosystem(PropertyID)
         #address not in database, insert
@@ -1088,7 +1085,6 @@ def syncAddress(Address, Protocol):
                   "(Address, Protocol, PropertyID, Ecosystem, BalanceAvailable, BalanceReserved, BalanceAccepted) "
                   "VALUES (%s,%s,%s,%s,%s,%s,%s)",
                   (Address, Protocol, PropertyID, Ecosystem, Available, Reserved, Accepted) )
-        printdebug((Address, Protocol, PropertyID, Ecosystem, Available, Reserved, Accepted),9)                   
       else:
         #address in database update
         printdebug((Address, Protocol,"address in database update\n"),9)
