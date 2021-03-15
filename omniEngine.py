@@ -55,7 +55,7 @@ else:
   if config.TESTNET:
     firstMPtxBlock=263137
   else:
-    firstMPtxBlock=252317
+    firstMPtxBlock=4032091
 
   #get last known block processed from db
   currentBlock=dbSelect("select max(blocknumber) from blocks", None)[0][0]
@@ -102,8 +102,8 @@ else:
     updateRan=True
 
   #get highest TxDBSerialNum (number of rows in the Transactions table)
-  #22111443 btc tx's before block 252317
-  TxDBSerialNum=dbSelect('select coalesce(max(txdbserialnum), 22111443) from transactions')[0][0]+1
+  #4417200 zur tx's before block 4032091
+  TxDBSerialNum=dbSelect('select coalesce(max(txdbserialnum), 4417200) from transactions')[0][0]+1
 
   #main loop, process new blocks
   while currentBlock <= endBlock:

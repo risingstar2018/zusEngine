@@ -239,7 +239,7 @@ def updateTxStats():
     ROWS=dbSelect("select blocknumber,blocktime from blocks order by blocknumber desc limit 1")
     curblock=ROWS[0][0]
     btime=ROWS[0][1]
-    ROWS=dbSelect("select coalesce(max(blocknumber),252316) from txstats")
+    ROWS=dbSelect("select coalesce(max(blocknumber),4032090) from txstats")
     lastblock=ROWS[0][0]
     nextblock=lastblock+1
     printdebug(("TxStats: lastblock",lastblock,", curblock:",str(curblock)),0)
