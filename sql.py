@@ -1463,7 +1463,7 @@ def updateProperty(PropertyID, Protocol, LastTxDBSerialNum=None):
       Issuer = rawprop['issuer']
 
       if PropertyID in [1,2]:
-        rawprop['blocktime']=1377994675
+        rawprop['blocktime']=1615766400
         if PropertyID == 1:
           rawprop['name']=u'Zurshares Token'
         elif PropertyID == 2:
