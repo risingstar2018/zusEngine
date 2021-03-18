@@ -16,11 +16,11 @@ insert into Protocols values (
 insert into smartproperties (Protocol, propertyid, issuer, createtxdbserialnum, lasttxdbserialnum, propertyname, propertytype, propertydata) values (
      'Zurcoin', 0, 'Daniel Mark Harrison', -1, -1, 'ZUR', 2, '{"name":"ZUR", "blocktime":1388470437, "data":"Sat Dec 31 IST 2013 Zurcoin crypto", "issuer":"Daniel Mark Harrison", "url":"http://www.zurcoin.org", "propertyid":0 ,"divisible": true}');
 
-insert into smartproperties (Protocol, propertyid, issuer, createtxdbserialnum, lasttxdbserialnum, propertyname, propertytype, propertydata, registrationdata, flags) values (
-     'Zurshares', 1, 'UrpY6GsjF5WK33TzeiS8mQCPxzMdvbizp6', -1, -1, 'Zurshares', 2, '{"data":"Zurshares serve as the binding between Zurcoin, smart properties and contracts created on the Zurbank Layer."}','Zurshares serve as the binding between Zurcoin, smart properties and contracts created on the Zurbank Layer.', '{"registered":"true"}');
+insert into smartproperties (Protocol, propertyid, ecosystem, issuer, createtxdbserialnum, lasttxdbserialnum, propertyname, propertytype, propertydata, registrationdata, flags) values (
+     'Zurshares', 1, 'Production', 'UrpY6GsjF5WK33TzeiS8mQCPxzMdvbizp6', -1, -1, 'Zurshares', 2, '{"data":"Zurshares serve as the binding between Zurcoin, smart properties and contracts created on the Zurbank Layer."}','Zurshares serve as the binding between Zurcoin, smart properties and contracts created on the Zurbank Layer.', '{"registered":"true"}');
 
-insert into smartproperties (Protocol, propertyid, issuer, createtxdbserialnum, lasttxdbserialnum, propertyname, propertytype, propertydata, registrationdata, flags) values (
-     'Zurshares', 2, 'UrpY6GsjF5WK33TzeiS8mQCPxzMdvbizp6', -1, -1, 'Test Zurshares tokens', 2, '{"data":"Test Zurshares serve as the binding between Zurcoin, smart properties and contracts created on the Zurbank Layer."}','Test Zurshares serve as the binding between Zurcoin, smart properties and contracts created on the Zurbank Layer.', '{"registered":"true"}');
+insert into smartproperties (Protocol, propertyid, ecosystem, issuer, createtxdbserialnum, lasttxdbserialnum, propertyname, propertytype, propertydata, registrationdata, flags) values (
+     'Zurshares', 2, 'Test', 'UrpY6GsjF5WK33TzeiS8mQCPxzMdvbizp6', -1, -1, 'Test Zurshares tokens', 2, '{"data":"Test Zurshares serve as the binding between Zurcoin, smart properties and contracts created on the Zurbank Layer."}','Test Zurshares serve as the binding between Zurcoin, smart properties and contracts created on the Zurbank Layer.', '{"registered":"true"}');
 /*Load the list of Fiat Currencies we track */
 
 insert into smartproperties (Protocol, propertyid, issuer, createtxdbserialnum, lasttxdbserialnum, propertyname) values (
