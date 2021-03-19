@@ -778,7 +778,7 @@ def updatedex(rawtx, TxDBSerialNum, Protocol):
       totalselling=amountavailable
 
       #convert all btc stuff, need additional logic for metadex
-      amountdesired=int(decimal.Decimal(str(rawtx['result']['bitcoindesired']))*decimal.Decimal(1e5))
+      amountdesired=int(decimal.Decimal(str(rawtx['result']['zurcoindesired']))*decimal.Decimal(1e5))
       minimumfee=int(decimal.Decimal(str(rawtx['result']['feerequired']))*decimal.Decimal(1e5))
 
       #rawtx does't have ppc, do the calculation to store
@@ -1031,7 +1031,7 @@ def resetdextable_MP():
         totalselling=amountaccepted
 
         #convert all btc stuff, need additional logic for metadex
-        amountdesired=int(decimal.Decimal(str(sale['bitcoindesired']))*decimal.Decimal(1e5))
+        amountdesired=int(decimal.Decimal(str(sale['zurcoindesired']))*decimal.Decimal(1e5))
         minimumfee=int(decimal.Decimal(str(sale['minimumfee']))*decimal.Decimal(1e5))
         unitprice=int(decimal.Decimal(str(sale['unitprice']))*decimal.Decimal(1e5))
 
