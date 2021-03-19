@@ -490,7 +490,7 @@ create table if not exists Categories (
  */
 create table if not exists Settings(
         Key varchar(32) not null
-        , Value varchar(64) not null
+        , Value varchar(128) not null
         , Note varchar(256)
         , updated_at timestamp(0) DEFAULT now()
         , primary key (key)

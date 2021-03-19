@@ -3,7 +3,7 @@ from sql import *
 dbInit()
 
 txtofix=dbSelect("select txtype, txhash, txdbserialnum from transactions where txtype=-51 or txtype=51 or txtype=53")
-Protocol="Mastercoin"
+Protocol="Zurshares"
 
 for tx in txtofix:
 

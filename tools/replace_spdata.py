@@ -10,7 +10,7 @@ for each in rows:
   rawtx={}
   rawtx['result'] = dbSelect("select txdata from txjson where txdbserialnum=" + str(txdbserialnum))[0][0]
   print rawtx
-  insertProperty(rawtx, 'Mastercoin', 2147483737)
+  insertProperty(rawtx, 'Zurshares', 2147483737)
   #statement = "insert into txjson (txdbserialnum, txdata, protocol) values (" + str(each[2]) + ", \'" + json.dumps(gettransaction_MP(each[0])['result']) + "\', \'" + each[1] + "\')"
   #print statement
   #dbExecute(statement);
