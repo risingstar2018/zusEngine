@@ -58,7 +58,7 @@ def dumptxaddr_csv(csvwb, rawtx, Protocol, TxDBSerialNum):
             csvwb.writerow(row)
           AddressTxIndex+=1
 
-    elif Protocol == "Mastercoin":
+    elif Protocol == "Zurshares":
       AddressTxIndex=0
       AddressRole="sender"
       type=get_TxType(rawtx['result']['type'])
@@ -280,7 +280,7 @@ def dumptx_csv(csvwb, rawtx, Protocol, block_height, seq, dbserialnum):
       Ecosystem= ""
       TxSubmitTime = datetime.datetime.utcfromtimestamp(rawtx['result']['time'])
 
-    elif Protocol == "Mastercoin":
+    elif Protocol == "Zurshares":
       #currently type a text output from mastercore 'Simple Send' and version is unknown
       TxType= get_TxType(rawtx['result']['type'])
       TxVersion=0
