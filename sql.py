@@ -1448,9 +1448,9 @@ def updateProperty(PropertyID, Protocol, LastTxDBSerialNum=None):
       rawprop = {"name":"ZUR", "blocktime":1388470437, "data":"Sat Dec 31 IST 2013 Zurcoin crypto", "issuer":"Daniel Mark Harrison", "url":"http://www.zurcoin.org", "propertyid":0 ,"divisible": True}
       Issuer = rawprop['issuer']
       try:
-        r = requests.get('https://blockchain.info/q/totalbc')
-        amt=int(r.text)
-        rawprop['totaltokens'] = str(int(amt/1e5))+".00000000"
+        r = requests.get('https://explorer.zurbank.io/ext/getmoneysupply')
+        # amt=int(r.text)
+        rawprop['totaltokens'] = str(r.text)
       except:
         pass
     else:
